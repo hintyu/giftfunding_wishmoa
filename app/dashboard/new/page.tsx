@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { APP_NAME, THEME_COLORS, type ThemeColorKey } from "@/lib/constants";
+import { THEME_COLORS, type ThemeColorKey } from "@/lib/constants";
+import TossQrGuideModal from "@/components/TossQrGuideModal";
+import { decodeQRFromImage, isValidTossQrLink, extractAccountFromTossLink } from "@/lib/qr-decoder";
 
 // 은행 목록
 const BANKS = [
@@ -14,7 +16,7 @@ const BANKS = [
 ] as const;
 
 export default function NewProjectPage() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
   
   const [formData, setFormData] = useState({
@@ -23,10 +25,14 @@ export default function NewProjectPage() {
     accountBank: '',
     accountNumber: '',
     accountHolder: '',
+    tossQrLink: '',
     themeColor: 'purple' as ThemeColorKey,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isQrGuideOpen, setIsQrGuideOpen] = useState(false);
+  const [isDecodingQr, setIsDecodingQr] = useState(false);
+  const [qrStatus, setQrStatus] = useState<'none' | 'success' | 'error'>('none');
 
   // 비로그인 사용자 리다이렉트
   if (status === 'unauthenticated') {
@@ -46,6 +52,58 @@ export default function NewProjectPage() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  // 토스 QR코드 업로드 처리
+  const handleQrUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsDecodingQr(true);
+    setQrStatus('none');
+
+    try {
+      const qrData = await decodeQRFromImage(file);
+      
+      if (!qrData) {
+        setQrStatus('error');
+        setError('QR코드를 인식할 수 없습니다. 다시 시도해주세요.');
+        return;
+      }
+
+      if (!isValidTossQrLink(qrData)) {
+        setQrStatus('error');
+        setError('토스 QR송금 코드가 아닙니다. 올바른 QR코드를 업로드해주세요.');
+        return;
+      }
+
+      // QR 링크에서 계좌 정보 추출
+      const accountInfo = extractAccountFromTossLink(qrData);
+      
+      setFormData(prev => ({
+        ...prev,
+        tossQrLink: qrData,
+        // 계좌 정보도 자동 입력 (옵션)
+        ...(accountInfo && {
+          accountBank: accountInfo.bank,
+          accountNumber: accountInfo.accountNo,
+        }),
+      }));
+      
+      setQrStatus('success');
+      setError(null);
+    } catch {
+      setQrStatus('error');
+      setError('QR코드 처리 중 오류가 발생했습니다.');
+    } finally {
+      setIsDecodingQr(false);
+    }
+  };
+
+  // 토스 QR 링크 삭제
+  const handleRemoveQrLink = () => {
+    setFormData(prev => ({ ...prev, tossQrLink: '' }));
+    setQrStatus('none');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -210,6 +268,63 @@ export default function NewProjectPage() {
             </div>
           </div>
 
+          {/* 토스 QR송금 설정 */}
+          <div className="bg-blue-50 rounded-2xl p-5 space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold text-gray-800 flex items-center gap-2">
+                📱 토스 간편송금
+                <span className="text-xs font-normal text-gray-500">(선택)</span>
+              </h3>
+              <button
+                type="button"
+                onClick={() => setIsQrGuideOpen(true)}
+                className="text-xs text-blue-600 hover:text-blue-800 underline"
+              >
+                발급 방법 보기
+              </button>
+            </div>
+
+            <p className="text-sm text-gray-600">
+              토스 QR코드를 업로드하면 후원자가 &quot;토스로 바로 쏴줄게!&quot; 버튼을 사용할 수 있어요
+            </p>
+
+            {/* QR 상태 표시 */}
+            {qrStatus === 'success' && formData.tossQrLink && (
+              <div className="flex items-center justify-between bg-green-100 border border-green-300 rounded-lg p-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-green-600 text-lg">✓</span>
+                  <span className="text-sm text-green-700 font-medium">토스 QR코드 등록 완료!</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleRemoveQrLink}
+                  className="text-xs text-red-600 hover:text-red-800"
+                >
+                  삭제
+                </button>
+              </div>
+            )}
+
+            {qrStatus !== 'success' && (
+              <label className="block w-full px-4 py-4 bg-white hover:bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer text-center transition-colors">
+                {isDecodingQr ? (
+                  <span className="text-gray-500">QR코드 분석 중...</span>
+                ) : (
+                  <span className="text-gray-600">
+                    📷 토스 QR코드 이미지 업로드
+                  </span>
+                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleQrUpload}
+                  className="hidden"
+                  disabled={isDecodingQr}
+                />
+              </label>
+            )}
+          </div>
+
           {/* 테마 컬러 선택 */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-3">
@@ -254,6 +369,12 @@ export default function NewProjectPage() {
           </button>
         </form>
       </main>
+
+      {/* 토스 QR 가이드 모달 */}
+      <TossQrGuideModal
+        isOpen={isQrGuideOpen}
+        onClose={() => setIsQrGuideOpen(false)}
+      />
     </div>
   );
 }

@@ -41,7 +41,7 @@ const STATUS_LABELS: Record<string, { label: string; color: string }> = {
 
 export default function ItemsManagePage({ params }: { params: Promise<{ projectId: string }> }) {
   const { projectId } = use(params);
-  const { data: session, status: authStatus } = useSession();
+  const { status: authStatus } = useSession();
   const router = useRouter();
 
   const [items, setItems] = useState<Item[]>([]);
@@ -69,6 +69,7 @@ export default function ItemsManagePage({ params }: { params: Promise<{ projectI
     if (authStatus === 'authenticated') {
       loadItems();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authStatus, projectId]);
 
   const loadItems = async () => {
@@ -343,10 +344,10 @@ function SortableItemCard({
           </p>
           
           {/* 액션 버튼 - 아래쪽에 균등 배분 */}
-          <div className="grid grid-cols-4 gap-2 mt-3">
+          <div className="flex flex-wrap gap-2 mt-3">
             <button
               onClick={onEdit}
-              className="text-xs text-white bg-green-500 hover:bg-green-600 px-2 py-2 rounded font-medium transition-colors"
+              className="text-xs text-green-600 hover:text-green-800 px-3 py-2 border border-green-400 hover:border-green-600 rounded font-medium transition-colors bg-transparent"
             >
               수정
             </button>
@@ -354,64 +355,40 @@ function SortableItemCard({
               <>
                 <button
                   onClick={() => onStatusChange(item.itemId, 'hidden')}
-                  className="text-xs text-gray-700 bg-white hover:bg-gray-50 px-2 py-2 border border-gray-300 rounded font-medium transition-colors"
+                  className="text-xs text-gray-600 hover:text-gray-800 px-3 py-2 border border-gray-400 hover:border-gray-600 rounded font-medium transition-colors bg-transparent"
                 >
                   숨기기
                 </button>
                 <button
                   onClick={() => onStatusChange(item.itemId, 'completed')}
-                  className="text-xs text-white bg-blue-500 hover:bg-blue-600 px-2 py-2 rounded font-medium transition-colors"
+                  className="text-xs text-blue-600 hover:text-blue-800 px-3 py-2 border border-blue-400 hover:border-blue-600 rounded font-medium transition-colors bg-transparent"
                 >
                   완료
-                </button>
-                <button
-                  onClick={() => onDelete(item.itemId)}
-                  className="text-xs text-white bg-red-500 hover:bg-red-600 px-2 py-2 rounded font-medium transition-colors"
-                >
-                  삭제
                 </button>
               </>
             )}
             {item.itemStatus === 'hidden' && (
-              <>
-                <button
-                  onClick={() => onStatusChange(item.itemId, 'active')}
-                  className="text-xs text-white bg-green-500 hover:bg-green-600 px-2 py-2 rounded font-medium transition-colors col-span-2"
-                >
-                  활성화
-                </button>
-                <button
-                  onClick={() => onDelete(item.itemId)}
-                  className="text-xs text-white bg-red-500 hover:bg-red-600 px-2 py-2 rounded font-medium transition-colors"
-                >
-                  삭제
-                </button>
-              </>
-            )}
-            {item.itemStatus === 'completed' && (
-              <>
-                <button
-                  onClick={() => onStatusChange(item.itemId, 'active')}
-                  className="text-xs text-white bg-green-500 hover:bg-green-600 px-2 py-2 rounded font-medium transition-colors col-span-2"
-                >
-                  활성화
-                </button>
-                <button
-                  onClick={() => onDelete(item.itemId)}
-                  className="text-xs text-white bg-red-500 hover:bg-red-600 px-2 py-2 rounded font-medium transition-colors"
-                >
-                  삭제
-                </button>
-              </>
-            )}
-            {item.itemStatus !== 'active' && item.itemStatus !== 'hidden' && item.itemStatus !== 'completed' && (
               <button
-                onClick={() => onDelete(item.itemId)}
-                className="text-xs text-white bg-red-500 hover:bg-red-600 px-2 py-2 rounded font-medium transition-colors col-span-3"
+                onClick={() => onStatusChange(item.itemId, 'active')}
+                className="text-xs text-green-600 hover:text-green-800 px-3 py-2 border border-green-400 hover:border-green-600 rounded font-medium transition-colors bg-transparent"
               >
-                삭제
+                활성화
               </button>
             )}
+            {item.itemStatus === 'completed' && (
+              <button
+                onClick={() => onStatusChange(item.itemId, 'active')}
+                className="text-xs text-green-600 hover:text-green-800 px-3 py-2 border border-green-400 hover:border-green-600 rounded font-medium transition-colors bg-transparent"
+              >
+                활성화
+              </button>
+            )}
+            <button
+              onClick={() => onDelete(item.itemId)}
+              className="text-xs text-red-600 hover:text-red-800 px-3 py-2 border border-red-400 hover:border-red-600 rounded font-medium transition-colors bg-transparent"
+            >
+              삭제
+            </button>
           </div>
         </div>
       </div>
@@ -566,6 +543,7 @@ function ItemFormModal({
             {/* 이미지 미리보기 */}
             {(formData.itemImage || uploadedImageUrl) && (
               <div className="mb-2">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={formData.itemImage || uploadedImageUrl || ''}
                   alt="미리보기"

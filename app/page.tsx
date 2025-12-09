@@ -8,7 +8,7 @@ import naverLoginButton from "./image/naver_login_button.png";
 import { APP_NAME } from "@/lib/constants";
 
 export default function Home() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
 
   // 로그인된 사용자는 대시보드로 리다이렉트
@@ -124,6 +124,14 @@ export default function Home() {
                 />
               </svg>
               <span className="text-gray-700 font-medium" style={{ fontFamily: "'Roboto', system-ui, -apple-system, sans-serif", letterSpacing: '0.01em' }}>Google로 로그인</span>
+            </button>
+
+            {/* 구경하기 버튼 */}
+            <button
+              onClick={() => router.push('/p/23M49DeE')}
+              className="text-gray-500 hover:text-gray-700 underline text-sm mt-2 transition-colors"
+            >
+              로그인 안하고 구경할래요
             </button>
           </div>
         </div>

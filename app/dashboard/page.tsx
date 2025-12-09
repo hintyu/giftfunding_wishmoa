@@ -114,16 +114,6 @@ export default function Dashboard() {
 
       {/* 메인 콘텐츠 */}
       <main className="container mx-auto px-4 py-8 max-w-4xl">
-        {/* 환영 메시지 */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            🎉 환영합니다!
-          </h2>
-          <p className="text-gray-600">
-            이제 나만의 선물 펀딩 페이지를 만들어보세요.
-          </p>
-        </div>
-
         {/* 새 프로젝트 만들기 버튼 */}
         <button
           onClick={() => router.push('/dashboard/new')}

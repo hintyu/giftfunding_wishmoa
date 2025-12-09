@@ -25,7 +25,7 @@ const STATUS_LABELS: Record<string, { label: string; color: string }> = {
 
 export default function DonationsManagePage({ params }: { params: Promise<{ projectId: string }> }) {
   const { projectId } = use(params);
-  const { data: session, status: authStatus } = useSession();
+  const { status: authStatus } = useSession();
   const router = useRouter();
 
   const [donations, setDonations] = useState<Donation[]>([]);
@@ -40,6 +40,7 @@ export default function DonationsManagePage({ params }: { params: Promise<{ proj
     if (authStatus === 'authenticated') {
       loadDonations();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authStatus, projectId]);
 
   const loadDonations = async () => {

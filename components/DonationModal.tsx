@@ -12,6 +12,7 @@ interface AccountInfo {
   accountBank: string;
   accountNumber: string;
   accountHolder: string;
+  tossQrLink?: string | null;
 }
 
 interface DonationModalProps {
@@ -51,32 +52,28 @@ export default function DonationModal({
       .catch(() => alert('복사에 실패했습니다.'));
   };
 
-  // 토스 딥링크 생성
-  const getTossDeepLink = () => {
-    const bankCode = getBankCode(accountInfo.accountBank);
-    const encodedBank = encodeURIComponent(accountInfo.accountBank);
-    return `supertoss://send?amount=${finalAmount}&bank=${encodedBank}&accountNo=${accountInfo.accountNumber.replace(/-/g, '')}&origin=qr`;
-  };
+  // 토스 QR 링크가 있는지 확인
+  const hasTossQrLink = !!accountInfo.tossQrLink;
 
-  // 은행 코드 매핑 (토스용)
-  const getBankCode = (bankName: string) => {
-    const bankCodes: Record<string, string> = {
-      '카카오뱅크': '090',
-      '토스뱅크': '092',
-      '국민은행': '004',
-      '신한은행': '088',
-      '하나은행': '081',
-      '우리은행': '020',
-      'NH농협은행': '011',
-    };
-    return bankCodes[bankName] || '';
+  // 토스 딥링크 생성 (QR 링크 기반)
+  const getTossDeepLink = () => {
+    if (!accountInfo.tossQrLink) return null;
+    
+    // QR 링크에서 amount만 변경
+    try {
+      const url = new URL(accountInfo.tossQrLink);
+      url.searchParams.set('amount', finalAmount.toString());
+      return url.toString();
+    } catch {
+      return null;
+    }
   };
 
   const handleTossLink = () => {
-    window.location.href = getTossDeepLink();
-    setTimeout(() => {
-      window.open('https://toss.im/', '_blank');
-    }, 1500);
+    const deepLink = getTossDeepLink();
+    if (deepLink) {
+      window.location.href = deepLink;
+    }
   };
 
   const handleSubmit = async (buttonType: 'copy' | 'toss') => {
@@ -224,7 +221,7 @@ export default function DonationModal({
           </div>
 
           {/* 버튼들 */}
-          <div className="grid grid-cols-2 gap-2">
+          <div className={`grid gap-2 ${hasTossQrLink ? 'grid-cols-2' : 'grid-cols-1'}`}>
             <button
               onClick={() => handleSubmit('copy')}
               className="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-3 px-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -232,13 +229,15 @@ export default function DonationModal({
             >
               {isSubmitting ? '처리중...' : '계좌번호 복사'}
             </button>
-            <button
-              onClick={() => handleSubmit('toss')}
-              className="bg-gradient-to-r from-[#381DFC] to-[#DE1761] hover:from-[#2810d0] hover:to-[#b91250] text-white font-semibold py-3 px-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed leading-tight"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? '처리중...' : <>토스로 바로<br/>쏴줄게!</>}
-            </button>
+            {hasTossQrLink && (
+              <button
+                onClick={() => handleSubmit('toss')}
+                className="bg-gradient-to-r from-[#381DFC] to-[#DE1761] hover:from-[#2810d0] hover:to-[#b91250] text-white font-semibold py-3 px-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed leading-tight"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? '처리중...' : <>토스로 바로<br/>쏴줄게!</>}
+              </button>
+            )}
           </div>
 
           <p className="text-xs text-gray-500 text-center mt-3">

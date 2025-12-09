@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { encrypt, decrypt } from '@/lib/crypto';
 
 interface RouteParams {
   params: Promise<{ projectId: string }>;
@@ -13,12 +14,20 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const { projectId } = await params;
     const session = await getServerSession(authOptions);
 
+    // 소유자인지 먼저 확인하여 숨긴 아이템 포함 여부 결정
+    const isOwner = session?.user?.id ? await prisma.project.findFirst({
+      where: { projectId, userId: session.user.id },
+      select: { projectId: true },
+    }) : null;
+
     const project = await prisma.project.findUnique({
       where: { projectId },
       include: {
         items: {
           where: {
-            itemStatus: { in: ['active', 'completed'] },
+            // 소유자: active, hidden, completed 모두 표시
+            // 비소유자: active, completed만 표시
+            itemStatus: { in: isOwner ? ['active', 'hidden', 'completed'] : ['active', 'completed'] },
           },
           orderBy: { itemOrder: 'asc' },
           include: {
@@ -48,12 +57,12 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     }
 
     // 숨김 상태인 경우 소유자만 볼 수 있음
-    if (project.projectStatus === 'hidden' && session?.user?.id !== project.userId) {
+    if (project.projectStatus === 'hidden' && !isOwner) {
       return NextResponse.json({ error: '프로젝트를 찾을 수 없습니다.' }, { status: 404 });
     }
 
-    // 소유자 여부 추가
-    const isOwner = session?.user?.id === project.userId;
+    // 최종 소유자 여부 (project.userId로 확인)
+    const isProjectOwner = session?.user?.id === project.userId;
 
     // 각 아이템의 후원 총액 계산 (pending + confirmed 모두 포함)
     const itemsWithTotal = project.items.map(item => ({
@@ -69,11 +78,14 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       })),
     }));
 
+    // 계좌번호 복호화 (후원 시 필요)
+    const decryptedAccountNumber = decrypt(project.accountNumber);
+
     return NextResponse.json({
       ...project,
+      accountNumber: decryptedAccountNumber,
       items: itemsWithTotal,
-      isOwner,
-      // 계좌 정보는 모든 사용자에게 표시 (후원을 위해)
+      isOwner: isProjectOwner,
     });
   } catch (error) {
     console.error('프로젝트 조회 실패:', error);
@@ -104,7 +116,10 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     }
 
     const body = await request.json();
-    const { projectTitle, projectSubtitle, accountBank, accountNumber, accountHolder, projectStatus, themeColor } = body;
+    const { projectTitle, projectSubtitle, accountBank, accountNumber, accountHolder, projectStatus, themeColor, tossQrLink } = body;
+
+    // 계좌번호 암호화 (새 값이 있을 때만)
+    const encryptedAccountNumber = accountNumber ? encrypt(accountNumber.trim()) : undefined;
 
     const updatedProject = await prisma.project.update({
       where: { projectId },
@@ -112,8 +127,9 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
         ...(projectTitle && { projectTitle: projectTitle.trim() }),
         ...(projectSubtitle !== undefined && { projectSubtitle: projectSubtitle.trim() }),
         ...(accountBank && { accountBank: accountBank.trim() }),
-        ...(accountNumber && { accountNumber: accountNumber.trim() }),
+        ...(encryptedAccountNumber && { accountNumber: encryptedAccountNumber }),
         ...(accountHolder && { accountHolder: accountHolder.trim() }),
+        ...(tossQrLink !== undefined && { tossQrLink: tossQrLink || null }),
         ...(projectStatus && { projectStatus }),
         ...(themeColor && { themeColor }),
       },

@@ -41,10 +41,10 @@ export const THEME_COLORS = {
     gradient: 'from-[#FF6B9D] via-[#FF8FB3] to-[#FFB3C9]',
     primary: '#FF6B9D',
   },
-  blue: {
-    name: '하늘색',
-    gradient: 'from-[#4A90E2] via-[#65D5E8] to-[#7FE8F5]',
-    primary: '#4A90E2',
+  orange: {
+    name: '오렌지레드',
+    gradient: 'from-rose-400 via-orange-400 to-amber-400',
+    primary: '#F97316',
   },
   green: {
     name: '민트',

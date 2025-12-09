@@ -81,6 +81,7 @@ model Project {
   accountBank     String   @map("account_bank")
   accountNumber   String   @map("account_number")
   accountHolder   String   @map("account_holder")
+  tossQrLink      String?  @map("toss_qr_link") // 토스 QR코드에서 추출한 딥링크 (supertoss://send?...)
   themeColor      String   @default("purple") @map("theme_color") // purple, pink, blue, green
   projectStatus   String   @default("active") @map("project_status") // active, hidden, deleted
   createdAt       DateTime @default(now()) @map("created_at")
