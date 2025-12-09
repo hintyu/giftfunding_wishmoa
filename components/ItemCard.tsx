@@ -170,11 +170,8 @@ export default function ItemCard({ item, onDonateClick }: ItemCardProps) {
                   })}
                 </div>
               ) : (
-                <div className="flex items-center justify-center gap-2 min-h-[40px]">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center text-gray-300 border-2 border-dashed border-gray-300">
-                    <span className="text-lg">🎁</span>
-                  </div>
-                  <span className="text-xs text-gray-400">첫 후원자</span>
+                <div className="flex items-center justify-center min-h-[40px]">
+                  <span className="text-sm text-gray-500 text-center">첫 후원자가 되어보세요!</span>
                 </div>
               )}
             </div>
@@ -244,7 +241,7 @@ export default function ItemCard({ item, onDonateClick }: ItemCardProps) {
               disabled
               className="w-full bg-gradient-to-r from-[#381DFC] to-[#DE1761] text-white font-semibold py-3 px-4 rounded-lg text-base shadow-md cursor-default"
             >
-              🎉 펀딩 완료!
+              🎉 펀딩 완료! 감사합니다!
             </button>
           </div>
         ) : (

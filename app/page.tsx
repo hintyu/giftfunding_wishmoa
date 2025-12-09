@@ -50,9 +50,9 @@ export default function Home() {
           <h1 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-rose-500 to-amber-500 bg-clip-text text-transparent mb-3 md:mb-4">
             {APP_NAME}
           </h1>
-          <p className="text-sm md:text-lg text-gray-600 max-w-md mx-auto leading-relaxed px-4">
-            친구들에게 받고 싶은 선물을<br className="hidden md:block" />
-            공유하고, 함께 펀딩받아보세요!
+          <p className="text-base md:text-xl text-gray-600 max-w-md mx-auto leading-relaxed px-4 text-center">
+            친구들에게 받고 싶은 선물을 공유하고<br />
+            함께 펀딩받아 보세요!
           </p>
         </div>
 
@@ -85,11 +85,11 @@ export default function Home() {
             지금 바로 시작해보세요!
           </p>
           
-          <div className="flex flex-row items-center justify-center gap-3 md:gap-4 w-full max-w-[600px] mx-auto px-4">
+          <div className="flex flex-col items-center gap-4 w-full max-w-[300px] mx-auto">
             {/* 네이버 로그인 버튼 */}
             <button
               onClick={handleNaverLogin}
-              className="flex-1 transition-transform hover:scale-105 active:scale-95 cursor-pointer max-w-[300px]"
+              className="w-full transition-transform hover:scale-105 active:scale-95 cursor-pointer"
             >
               <Image
                 src={naverLoginButton}
@@ -103,9 +103,9 @@ export default function Home() {
             {/* 구글 로그인 버튼 */}
             <button
               onClick={handleGoogleLogin}
-              className="flex-1 h-[60px] max-w-[300px] flex items-center justify-center gap-2 md:gap-3 bg-white border-2 border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-all hover:border-gray-400"
+              className="w-full h-[60px] flex items-center justify-center gap-2 md:gap-3 bg-white border-2 border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-all hover:border-gray-400"
             >
-              <svg className="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
                 <path
                   fill="#4285F4"
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -123,7 +123,7 @@ export default function Home() {
                   d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                 />
               </svg>
-              <span className="text-gray-700 font-medium text-sm md:text-base" style={{ fontFamily: "'Roboto', system-ui, -apple-system, sans-serif", letterSpacing: '0.01em' }}>Google로 로그인</span>
+              <span className="text-gray-700 font-medium" style={{ fontFamily: "'Roboto', system-ui, -apple-system, sans-serif", letterSpacing: '0.01em' }}>Google로 로그인</span>
             </button>
           </div>
         </div>
@@ -154,10 +154,12 @@ export default function Home() {
 // 기능 소개 카드 컴포넌트
 function FeatureCard({ emoji, title, description }: { emoji: string; title: string; description: string }) {
   return (
-    <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-4 md:p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow min-w-[240px] md:min-w-0">
-      <div className="text-3xl md:text-4xl mb-3 md:mb-4">{emoji}</div>
-      <h3 className="text-base md:text-lg font-semibold text-gray-800 mb-1 md:mb-2">{title}</h3>
-      <p className="text-gray-500 text-xs md:text-sm leading-relaxed">{description}</p>
+    <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-4 md:p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow min-w-[200px] md:min-w-0">
+      <div className="flex items-center gap-2 mb-2 md:mb-3">
+        <span className="text-xl md:text-2xl">{emoji}</span>
+        <h3 className="text-base md:text-lg font-semibold text-gray-800">{title}</h3>
+      </div>
+      <p className="text-gray-500 text-sm md:text-base leading-relaxed">{description}</p>
     </div>
   );
 }
