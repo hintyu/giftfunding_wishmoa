@@ -78,25 +78,25 @@ export default function Home() {
             지금 바로 시작해보세요!
           </p>
           
-          <div className="flex flex-col items-center gap-4">
+          <div className="flex flex-col items-center gap-4 w-full max-w-[300px] mx-auto">
             {/* 네이버 로그인 버튼 */}
             <button
               onClick={handleNaverLogin}
-              className="inline-block transition-transform hover:scale-105 active:scale-95 cursor-pointer"
+              className="w-full transition-transform hover:scale-105 active:scale-95 cursor-pointer"
             >
               <Image
                 src={naverLoginButton}
                 alt="네이버 로그인"
                 width={300}
                 height={60}
-                className="rounded-lg shadow-md"
+                className="w-full h-auto rounded-lg shadow-md"
               />
             </button>
 
             {/* 구글 로그인 버튼 */}
             <button
               onClick={handleGoogleLogin}
-              className="flex items-center justify-center gap-3 px-6 py-3 bg-white border-2 border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-all hover:border-gray-400"
+              className="w-full h-[60px] flex items-center justify-center gap-3 bg-white border-2 border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-all hover:border-gray-400"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path

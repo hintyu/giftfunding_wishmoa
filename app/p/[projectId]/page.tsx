@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import ItemCard from '@/components/ItemCard';
 import DonationModal from '@/components/DonationModal';
-import { APP_NAME } from '@/lib/constants';
+import { APP_NAME, THEME_COLORS, type ThemeColorKey } from '@/lib/constants';
 
 interface Donation {
   donationId: string;
@@ -32,6 +32,7 @@ interface Project {
   accountBank: string;
   accountNumber: string;
   accountHolder: string;
+  themeColor: string;
   projectStatus: string;
   isOwner: boolean;
   items: Item[];
@@ -155,7 +156,7 @@ export default function PublicProjectPage({ params }: { params: Promise<{ projec
   return (
     <div className="min-h-screen bg-gray-50 overflow-y-auto font-omyu">
       {/* 헤더 */}
-      <header className="bg-gradient-to-r from-[#381DFC] via-[#5B3FFF] to-[#7B5FFF] text-white py-8 px-4 shadow-2xl sticky top-0 z-40 relative">
+      <header className={`bg-gradient-to-r ${THEME_COLORS[project.themeColor as ThemeColorKey]?.gradient || THEME_COLORS.purple.gradient} text-white py-8 px-4 shadow-2xl sticky top-0 z-40 relative`}>
         {/* 배경 장식 */}
         <div className="absolute inset-0 opacity-10 overflow-hidden pointer-events-none">
           <div className="absolute top-0 right-0 w-40 h-40 bg-white rounded-full blur-3xl"></div>
@@ -182,7 +183,7 @@ export default function PublicProjectPage({ params }: { params: Promise<{ projec
                     onClick={() => { router.push(`/p/${projectId}/items`); setIsMenuOpen(false); }}
                     className="w-full px-4 py-3 text-left text-gray-700 hover:bg-gray-100 flex items-center gap-2"
                   >
-                    🎁 선물 품목 관리
+                    🎁 선물 관리
                   </button>
                   <button
                     onClick={() => { router.push(`/p/${projectId}/donations`); setIsMenuOpen(false); }}
@@ -335,6 +336,7 @@ function ProjectEditModal({
     accountBank: project.accountBank,
     accountNumber: project.accountNumber,
     accountHolder: project.accountHolder,
+    themeColor: (project.themeColor || 'purple') as ThemeColorKey,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -481,6 +483,40 @@ function ProjectEditModal({
                 className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#381DFC] outline-none transition-all"
                 maxLength={20}
               />
+            </div>
+          </div>
+
+          {/* 테마 컬러 선택 */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-3">
+              🎨 테마 컬러
+            </label>
+            <div className="grid grid-cols-2 gap-3">
+              {(Object.keys(THEME_COLORS) as ThemeColorKey[]).map((key) => {
+                const theme = THEME_COLORS[key];
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, themeColor: key }))}
+                    className={`relative p-4 rounded-xl border-2 transition-all ${
+                      formData.themeColor === key
+                        ? 'border-gray-800 ring-2 ring-gray-200'
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <div className={`w-full h-12 rounded-lg bg-gradient-to-r ${theme.gradient} mb-2`} />
+                    <p className="text-sm font-medium text-gray-700">{theme.name}</p>
+                    {formData.themeColor === key && (
+                      <div className="absolute top-2 right-2 w-5 h-5 bg-gray-800 rounded-full flex items-center justify-center">
+                        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
 

@@ -29,3 +29,29 @@ export const DONATION_STATUS = {
   DELETED: 'deleted',
 } as const;
 
+// 프로젝트 테마 컬러
+export const THEME_COLORS = {
+  purple: {
+    name: '보라색',
+    gradient: 'from-[#381DFC] via-[#5B3FFF] to-[#7B5FFF]',
+    primary: '#381DFC',
+  },
+  pink: {
+    name: '핑크',
+    gradient: 'from-[#FF6B9D] via-[#FF8FB3] to-[#FFB3C9]',
+    primary: '#FF6B9D',
+  },
+  blue: {
+    name: '하늘색',
+    gradient: 'from-[#4A90E2] via-[#65D5E8] to-[#7FE8F5]',
+    primary: '#4A90E2',
+  },
+  green: {
+    name: '민트',
+    gradient: 'from-[#2ECC71] via-[#52E3A4] to-[#7FE8C4]',
+    primary: '#2ECC71',
+  },
+} as const;
+
+export type ThemeColorKey = keyof typeof THEME_COLORS;
+

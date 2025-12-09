@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { projectTitle, projectSubtitle, accountBank, accountNumber, accountHolder } = body;
+    const { projectTitle, projectSubtitle, accountBank, accountNumber, accountHolder, themeColor } = body;
 
     // 유효성 검사
     if (!projectTitle?.trim()) {
@@ -71,6 +71,7 @@ export async function POST(request: NextRequest) {
         accountBank: accountBank.trim(),
         accountNumber: accountNumber.trim(),
         accountHolder: accountHolder.trim(),
+        themeColor: themeColor || 'purple',
       },
     });
 

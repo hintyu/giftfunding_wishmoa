@@ -104,7 +104,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     }
 
     const body = await request.json();
-    const { projectTitle, projectSubtitle, accountBank, accountNumber, accountHolder, projectStatus } = body;
+    const { projectTitle, projectSubtitle, accountBank, accountNumber, accountHolder, projectStatus, themeColor } = body;
 
     const updatedProject = await prisma.project.update({
       where: { projectId },
@@ -115,6 +115,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
         ...(accountNumber && { accountNumber: accountNumber.trim() }),
         ...(accountHolder && { accountHolder: accountHolder.trim() }),
         ...(projectStatus && { projectStatus }),
+        ...(themeColor && { themeColor }),
       },
     });
 

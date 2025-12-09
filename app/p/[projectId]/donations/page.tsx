@@ -212,7 +212,7 @@ export default function DonationsManagePage({ params }: { params: Promise<{ proj
                         onClick={() => handleStatusChange(donation.donationId, 'confirmed')}
                         className="text-xs text-green-600 hover:text-green-800 px-2 py-1 border border-green-200 rounded"
                       >
-                        확인
+                        입금됐어요!
                       </button>
                     )}
                     {donation.donationStatus === 'confirmed' && (
