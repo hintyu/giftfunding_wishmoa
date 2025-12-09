@@ -40,65 +40,72 @@ export default function Home() {
       {/* Hero Section */}
       <main className="container mx-auto px-4 py-16 max-w-4xl">
         {/* 로고 & 타이틀 */}
-        <div className="text-center mb-16 animate-fade-in">
-          <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-rose-400 to-amber-400 shadow-lg shadow-rose-200/50">
-            <span className="text-4xl">🎁</span>
+        <div className="text-center mb-8 md:mb-16 animate-fade-in">
+          <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 mb-4 md:mb-6 rounded-2xl bg-gradient-to-br from-rose-400 to-amber-400 shadow-lg shadow-rose-200/50">
+            <span className="text-3xl md:text-4xl">🎁</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-rose-500 to-amber-500 bg-clip-text text-transparent mb-4">
+          <p className="text-sm md:text-base text-gray-500 mb-1 bg-gradient-to-r from-rose-500 to-amber-500 bg-clip-text text-transparent">
+            선물펀딩 프로젝트:
+          </p>
+          <h1 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-rose-500 to-amber-500 bg-clip-text text-transparent mb-3 md:mb-4">
             {APP_NAME}
           </h1>
-          <p className="text-lg md:text-xl text-gray-600 max-w-md mx-auto leading-relaxed">
-            친구들에게 받고 싶은 선물을<br />
+          <p className="text-sm md:text-lg text-gray-600 max-w-md mx-auto leading-relaxed px-4">
+            친구들에게 받고 싶은 선물을<br className="hidden md:block" />
             공유하고, 함께 펀딩받아보세요!
           </p>
         </div>
 
-        {/* 기능 소개 카드 */}
-        <div className="grid md:grid-cols-3 gap-6 mb-16">
-          <FeatureCard
-            emoji="📝"
-            title="위시리스트 작성"
-            description="받고 싶은 선물을 등록하고 나만의 펀딩 페이지를 만들어보세요"
-          />
-          <FeatureCard
-            emoji="🔗"
-            title="링크 공유"
-            description="짧은 URL로 친구들에게 쉽게 공유할 수 있어요"
-          />
-          <FeatureCard
-            emoji="💝"
-            title="함께 펀딩"
-            description="여러 친구들이 조금씩 모아 큰 선물을 완성해요"
-          />
+        {/* 기능 소개 카드 - 모바일에서 스크롤 가능하게 */}
+        <div className="mb-8 md:mb-16">
+          <div className="grid md:grid-cols-3 gap-4 md:gap-6 overflow-x-auto md:overflow-visible pb-2 md:pb-0 scrollbar-hide">
+            <div className="flex md:grid gap-4 md:gap-6 min-w-max md:min-w-0">
+              <FeatureCard
+                emoji="📝"
+                title="위시리스트 작성"
+                description="받고 싶은 선물을 등록하고 나만의 펀딩 페이지를 만들어보세요"
+              />
+              <FeatureCard
+                emoji="🔗"
+                title="링크 공유"
+                description="짧은 URL로 친구들에게 쉽게 공유할 수 있어요"
+              />
+              <FeatureCard
+                emoji="💝"
+                title="함께 펀딩"
+                description="여러 친구들이 조금씩 모아 큰 선물을 완성해요"
+              />
+            </div>
+          </div>
         </div>
 
         {/* 로그인 섹션 */}
         <div className="text-center">
-          <p className="text-gray-500 mb-6">
+          <p className="text-gray-500 mb-4 md:mb-6 text-sm md:text-base">
             지금 바로 시작해보세요!
           </p>
           
-          <div className="flex flex-col items-center gap-4 w-full max-w-[300px] mx-auto">
+          <div className="flex flex-row items-center justify-center gap-3 md:gap-4 w-full max-w-[600px] mx-auto px-4">
             {/* 네이버 로그인 버튼 */}
             <button
               onClick={handleNaverLogin}
-              className="w-full transition-transform hover:scale-105 active:scale-95 cursor-pointer"
+              className="flex-1 transition-transform hover:scale-105 active:scale-95 cursor-pointer max-w-[300px]"
             >
               <Image
                 src={naverLoginButton}
                 alt="네이버 로그인"
                 width={300}
                 height={60}
-                className="w-full h-auto rounded-lg shadow-md"
+                className="w-full h-[60px] object-contain rounded-lg shadow-md"
               />
             </button>
 
             {/* 구글 로그인 버튼 */}
             <button
               onClick={handleGoogleLogin}
-              className="w-full h-[60px] flex items-center justify-center gap-3 bg-white border-2 border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-all hover:border-gray-400"
+              className="flex-1 h-[60px] max-w-[300px] flex items-center justify-center gap-2 md:gap-3 bg-white border-2 border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-all hover:border-gray-400"
             >
-              <svg className="w-5 h-5" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" viewBox="0 0 24 24">
                 <path
                   fill="#4285F4"
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -116,7 +123,7 @@ export default function Home() {
                   d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                 />
               </svg>
-              <span className="text-gray-700 font-medium">Google로 로그인</span>
+              <span className="text-gray-700 font-medium text-sm md:text-base" style={{ fontFamily: "'Roboto', system-ui, -apple-system, sans-serif", letterSpacing: '0.01em' }}>Google로 로그인</span>
             </button>
           </div>
         </div>
@@ -147,10 +154,10 @@ export default function Home() {
 // 기능 소개 카드 컴포넌트
 function FeatureCard({ emoji, title, description }: { emoji: string; title: string; description: string }) {
   return (
-    <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-      <div className="text-4xl mb-4">{emoji}</div>
-      <h3 className="text-lg font-semibold text-gray-800 mb-2">{title}</h3>
-      <p className="text-gray-500 text-sm leading-relaxed">{description}</p>
+    <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-4 md:p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow min-w-[240px] md:min-w-0">
+      <div className="text-3xl md:text-4xl mb-3 md:mb-4">{emoji}</div>
+      <h3 className="text-base md:text-lg font-semibold text-gray-800 mb-1 md:mb-2">{title}</h3>
+      <p className="text-gray-500 text-xs md:text-sm leading-relaxed">{description}</p>
     </div>
   );
 }
