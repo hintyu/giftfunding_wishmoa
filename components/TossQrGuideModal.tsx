@@ -40,12 +40,13 @@ export default function TossQrGuideModal({ isOpen, onClose }: TossQrGuideModalPr
             <p className="text-sm text-gray-600 ml-8 mb-2">
               토스 앱 → 전체 메뉴 → &quot;QR 송금 발급하기&quot;
             </p>
-            <div className="relative w-full aspect-[9/16] max-w-[250px] mx-auto rounded-lg overflow-hidden shadow-md">
+            <div className="w-full max-w-[250px] mx-auto rounded-lg overflow-hidden shadow-md">
               <Image
                 src={tossQrGuide1}
                 alt="토스 QR 발급 가이드 1"
-                fill
-                className="object-contain bg-gray-100"
+                width={250}
+                height={0}
+                className="w-full h-auto object-contain bg-gray-100"
               />
             </div>
           </div>
@@ -61,12 +62,13 @@ export default function TossQrGuideModal({ isOpen, onClose }: TossQrGuideModalPr
             <p className="text-sm text-gray-600 ml-8 mb-2">
               계좌를 선택하고 &quot;이미지 저장&quot; 버튼을 눌러 QR코드를 저장해주세요
             </p>
-            <div className="relative w-full aspect-[9/16] max-w-[250px] mx-auto rounded-lg overflow-hidden shadow-md">
+            <div className="w-full max-w-[250px] mx-auto rounded-lg overflow-hidden shadow-md">
               <Image
                 src={tossQrGuide2}
                 alt="토스 QR 발급 가이드 2"
-                fill
-                className="object-contain bg-gray-100"
+                width={250}
+                height={0}
+                className="w-full h-auto object-contain bg-gray-100"
               />
             </div>
           </div>
