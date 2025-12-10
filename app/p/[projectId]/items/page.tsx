@@ -347,93 +347,95 @@ function SortableItemCard({
         isDragging ? 'opacity-50 shadow-lg ring-2 ring-[#381DFC]' : ''
       }`}
     >
-      <div className="flex gap-4">
-        {/* 드래그 핸들 */}
-        <div
-          {...attributes}
-          {...listeners}
-          className="flex items-center justify-center w-6 cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600"
-        >
-          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M7 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 2zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 14zm6-8a2 2 0 1 0-.001-4.001A2 2 0 0 0 13 6zm0 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 14z" />
-          </svg>
-        </div>
-
-        {/* 이미지 */}
-        <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
-          {item.itemImage ? (
-            <Image
-              src={item.itemImage}
-              alt={item.itemTitle}
-              width={80}
-              height={80}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-3xl">
-              🎁
-            </div>
-          )}
-        </div>
-
-        {/* 정보 */}
-        <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-gray-800 truncate">{item.itemTitle}</h3>
-          {/* 상태 표시 - 제목 아래 */}
-          <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium mt-1 ${STATUS_LABELS[item.itemStatus]?.color || 'bg-gray-100'}`}>
-            {STATUS_LABELS[item.itemStatus]?.label || item.itemStatus}
-          </span>
-          <p className="text-sm text-gray-500 mt-1">
-            목표: {formatNumber(item.itemPrice)}원
-          </p>
-          
-          {/* 액션 버튼 - 아래쪽에 균등 배분 */}
-          <div className="flex flex-wrap gap-2 mt-3">
-            <button
-              onClick={onEdit}
-              className="text-xs text-green-600 hover:text-green-800 px-3 py-2 border border-green-400 hover:border-green-600 rounded font-medium transition-colors bg-transparent"
-            >
-              수정
-            </button>
-            {item.itemStatus === 'active' && (
-              <>
-                <button
-                  onClick={() => onStatusChange(item.itemId, 'hidden')}
-                  className="text-xs text-gray-600 hover:text-gray-800 px-3 py-2 border border-gray-400 hover:border-gray-600 rounded font-medium transition-colors bg-transparent"
-                >
-                  숨기기
-                </button>
-                <button
-                  onClick={() => onStatusChange(item.itemId, 'completed')}
-                  className="text-xs text-blue-600 hover:text-blue-800 px-3 py-2 border border-blue-400 hover:border-blue-600 rounded font-medium transition-colors bg-transparent"
-                >
-                  완료
-                </button>
-              </>
-            )}
-            {item.itemStatus === 'hidden' && (
-              <button
-                onClick={() => onStatusChange(item.itemId, 'active')}
-                className="text-xs text-green-600 hover:text-green-800 px-3 py-2 border border-green-400 hover:border-green-600 rounded font-medium transition-colors bg-transparent"
-              >
-                활성화
-              </button>
-            )}
-            {item.itemStatus === 'completed' && (
-              <button
-                onClick={() => onStatusChange(item.itemId, 'active')}
-                className="text-xs text-green-600 hover:text-green-800 px-3 py-2 border border-green-400 hover:border-green-600 rounded font-medium transition-colors bg-transparent"
-              >
-                활성화
-              </button>
-            )}
-            <button
-              onClick={() => onDelete(item.itemId)}
-              className="text-xs text-red-600 hover:text-red-800 px-3 py-2 border border-red-400 hover:border-red-600 rounded font-medium transition-colors bg-transparent"
-            >
-              삭제
-            </button>
+      <div className="flex flex-col gap-4">
+        <div className="flex gap-4">
+          {/* 드래그 핸들 */}
+          <div
+            {...attributes}
+            {...listeners}
+            className="flex items-center justify-center w-6 cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600"
+          >
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M7 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 2zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 14zm6-8a2 2 0 1 0-.001-4.001A2 2 0 0 0 13 6zm0 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 14z" />
+            </svg>
           </div>
+
+          {/* 이미지 */}
+          <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+            {item.itemImage ? (
+              <Image
+                src={item.itemImage}
+                alt={item.itemTitle}
+                width={80}
+                height={80}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-3xl">
+                🎁
+              </div>
+            )}
+          </div>
+
+          {/* 정보 */}
+          <div className="flex-1 min-w-0">
+            <h3 className="font-semibold text-gray-800 truncate">{item.itemTitle}</h3>
+            {/* 상태 표시 - 제목 아래 */}
+            <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium mt-1 ${STATUS_LABELS[item.itemStatus]?.color || 'bg-gray-100'}`}>
+              {STATUS_LABELS[item.itemStatus]?.label || item.itemStatus}
+            </span>
+            <p className="text-sm text-gray-500 mt-1">
+              목표: {formatNumber(item.itemPrice)}원
+            </p>
+          </div>
+        </div>
+        
+        {/* 액션 버튼 - 카드 하단에 가로로 나란히 배치 */}
+        <div className="flex gap-2">
+          <button
+            onClick={onEdit}
+            className="flex-1 text-xs text-green-600 hover:text-green-800 px-3 py-2 border border-green-400 hover:border-green-600 rounded font-medium transition-colors bg-transparent"
+          >
+            수정
+          </button>
+          {item.itemStatus === 'active' && (
+            <>
+              <button
+                onClick={() => onStatusChange(item.itemId, 'hidden')}
+                className="flex-1 text-xs text-gray-600 hover:text-gray-800 px-3 py-2 border border-gray-400 hover:border-gray-600 rounded font-medium transition-colors bg-transparent"
+              >
+                숨기기
+              </button>
+              <button
+                onClick={() => onStatusChange(item.itemId, 'completed')}
+                className="flex-1 text-xs text-blue-600 hover:text-blue-800 px-3 py-2 border border-blue-400 hover:border-blue-600 rounded font-medium transition-colors bg-transparent"
+              >
+                완료
+              </button>
+            </>
+          )}
+          {item.itemStatus === 'hidden' && (
+            <button
+              onClick={() => onStatusChange(item.itemId, 'active')}
+              className="flex-1 text-xs text-green-600 hover:text-green-800 px-3 py-2 border border-green-400 hover:border-green-600 rounded font-medium transition-colors bg-transparent"
+            >
+              활성화
+            </button>
+          )}
+          {item.itemStatus === 'completed' && (
+            <button
+              onClick={() => onStatusChange(item.itemId, 'active')}
+              className="flex-1 text-xs text-green-600 hover:text-green-800 px-3 py-2 border border-green-400 hover:border-green-600 rounded font-medium transition-colors bg-transparent"
+            >
+              활성화
+            </button>
+          )}
+          <button
+            onClick={() => onDelete(item.itemId)}
+            className="flex-1 text-xs text-red-600 hover:text-red-800 px-3 py-2 border border-red-400 hover:border-red-600 rounded font-medium transition-colors bg-transparent"
+          >
+            삭제
+          </button>
         </div>
       </div>
     </div>

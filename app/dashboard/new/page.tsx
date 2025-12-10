@@ -191,7 +191,7 @@ export default function NewProjectPage() {
               name="projectTitle"
               value={formData.projectTitle}
               onChange={handleChange}
-              placeholder="예: 2024 생일선물 🎂"
+              placeholder="예: 2025 생일선물 🎂"
               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-rose-400 focus:ring-2 focus:ring-rose-100 outline-none transition-all"
               maxLength={50}
             />
