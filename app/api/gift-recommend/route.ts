@@ -48,7 +48,9 @@ async function callGeminiAPI(info: string): Promise<string> {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(`Gemini API 오류: ${response.status} ${JSON.stringify(errorData)}`);
+      // API 키 노출 방지를 위해 상세 에러는 서버 로그에만 기록
+      console.error('Gemini API 응답 에러:', response.status, errorData);
+      throw new Error(`Gemini API 오류: ${response.status}`);
     }
 
     const data = await response.json();
@@ -66,7 +68,8 @@ async function callGeminiAPI(info: string): Promise<string> {
     
     return recommendation;
   } catch (error) {
-    console.error('Gemini API 호출 실패:', error);
+    // API 키가 포함된 URL이 로그에 노출되지 않도록 메시지만 기록
+    console.error('Gemini API 호출 실패:', error instanceof Error ? error.message : 'Unknown error');
     throw error;
   }
 }
