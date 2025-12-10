@@ -190,30 +190,14 @@ export default function ItemsManagePage({ params }: { params: Promise<{ projectI
     <div className="min-h-screen bg-gray-50">
       {/* 헤더 */}
       <header className="bg-white border-b sticky top-0 z-10">
-        <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => router.push(`/p/${projectId}`)}
-              className="text-gray-500 hover:text-gray-700"
-            >
-              ← 뒤로
-            </button>
-            <h1 className="text-lg font-bold">선물 관리</h1>
-          </div>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setIsAddModalOpen(true)}
-              className="bg-[#381DFC] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#2810d0] transition-colors"
-            >
-              + 추가
-            </button>
-            <button
-              onClick={() => setIsRecommendModalOpen(true)}
-              className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-colors text-sm"
-            >
-              ✨ 추천받기 (BETA)
-            </button>
-          </div>
+        <div className="max-w-2xl mx-auto px-4 py-4 flex items-center gap-3">
+          <button
+            onClick={() => router.push(`/p/${projectId}`)}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            ← 뒤로
+          </button>
+          <h1 className="text-lg font-bold">선물 관리</h1>
         </div>
       </header>
 
@@ -241,6 +225,22 @@ export default function ItemsManagePage({ params }: { params: Promise<{ projectI
             순서 저장 중...
           </div>
         )}
+
+        {/* 버튼들 - 본문 상단 */}
+        <div className="flex flex-col gap-3 mb-6">
+          <button
+            onClick={() => setIsAddModalOpen(true)}
+            className="w-full bg-[#381DFC] text-white py-3 rounded-xl font-semibold hover:bg-[#2810d0] transition-colors text-base"
+          >
+            + 선물 추가하기
+          </button>
+          <button
+            onClick={() => setIsRecommendModalOpen(true)}
+            className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-colors text-base"
+          >
+            ✨ 선물 추천받기 (BETA)
+          </button>
+        </div>
 
         {items.length === 0 ? (
           <div className="text-center py-20">

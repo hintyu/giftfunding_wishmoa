@@ -156,7 +156,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="py-8 text-center text-gray-400 text-sm">
-        <p>© 2024 {APP_NAME}. Made with 💕</p>
+        <p>© 2025 {APP_NAME}. Made with 💕</p>
       </footer>
     </div>
   );
