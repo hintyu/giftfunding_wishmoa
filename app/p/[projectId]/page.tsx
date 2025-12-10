@@ -184,15 +184,12 @@ export default function PublicProjectPage({ params }: { params: Promise<{ projec
             {/* 좌측 위시모아 텍스트 로고 */}
             <button
               onClick={handleLogoClick}
-              className="z-50 px-3 py-1.5 hover:opacity-90 transition-opacity bg-white/70 backdrop-blur-sm rounded-lg flex items-center gap-1"
+              className="z-50 px-3 py-1.5 hover:opacity-90 transition-opacity bg-white/90 backdrop-blur-sm rounded-lg shadow-sm"
               title={session ? '대시보드로 이동' : '메인페이지로 이동'}
             >
               <span className="text-base font-bold bg-gradient-to-r from-rose-500 to-amber-500 bg-clip-text text-transparent">
                 {APP_NAME}
               </span>
-              <svg className="w-4 h-4 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
             </button>
 
             {/* 우측 소유자 메뉴 버튼 */}
