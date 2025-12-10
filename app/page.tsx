@@ -5,6 +5,7 @@ import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import naverLoginButton from "./image/naver_login_button.png";
+import logo from "./image/logo.png";
 import { APP_NAME } from "@/lib/constants";
 
 export default function Home() {
@@ -41,15 +42,16 @@ export default function Home() {
       <main className="container mx-auto px-4 py-16 max-w-4xl">
         {/* 로고 & 타이틀 */}
         <div className="text-center mb-8 md:mb-16 animate-fade-in">
-          <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 mb-4 md:mb-6 rounded-2xl bg-gradient-to-br from-rose-400 to-amber-400 shadow-lg shadow-rose-200/50">
-            <span className="text-3xl md:text-4xl">🎁</span>
+          <div className="inline-flex items-center justify-center mb-4 md:mb-6">
+            <Image
+              src={logo}
+              alt="위시모아 로고"
+              width={120}
+              height={120}
+              className="w-24 h-24 md:w-32 md:h-32"
+              priority
+            />
           </div>
-          <p className="text-sm md:text-base text-gray-500 mb-1 bg-gradient-to-r from-rose-500 to-amber-500 bg-clip-text text-transparent">
-            선물펀딩 프로젝트:
-          </p>
-          <h1 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-rose-500 to-amber-500 bg-clip-text text-transparent mb-3 md:mb-4">
-            {APP_NAME}
-          </h1>
           <p className="text-base md:text-xl text-gray-600 max-w-md mx-auto leading-relaxed px-4 text-center">
             친구들에게 받고 싶은 선물을 공유하고<br />
             함께 펀딩받아 보세요!
@@ -139,7 +141,7 @@ export default function Home() {
         {/* 사용 방법 */}
         <div className="mt-20 text-center">
           <h2 className="text-2xl font-bold text-gray-800 mb-8">이렇게 사용해요</h2>
-          <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8">
+          <div className="grid grid-cols-2 md:flex md:flex-row justify-center items-center gap-4 md:gap-8 max-w-md mx-auto">
             <Step number={1} text="로그인하기" />
             <Arrow />
             <Step number={2} text="위시리스트 작성" />
@@ -162,7 +164,7 @@ export default function Home() {
 // 기능 소개 카드 컴포넌트
 function FeatureCard({ emoji, title, description }: { emoji: string; title: string; description: string }) {
   return (
-    <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-4 md:p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow min-w-[200px] md:min-w-0">
+    <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-4 md:p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow min-w-[100px] md:min-w-0">
       <div className="flex items-center gap-2 mb-2 md:mb-3">
         <span className="text-xl md:text-2xl">{emoji}</span>
         <h3 className="text-base md:text-lg font-semibold text-gray-800">{title}</h3>

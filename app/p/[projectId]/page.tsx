@@ -35,6 +35,7 @@ interface Project {
   accountNumber: string;
   accountHolder: string;
   tossQrLink?: string | null;
+  donationAmounts?: string; // 쉼표로 구분된 후원 금액
   themeColor: string;
   projectStatus: string;
   isOwner: boolean;
@@ -163,8 +164,12 @@ export default function PublicProjectPage({ params }: { params: Promise<{ projec
     );
   }
 
+  // 테마 색상에 맞는 배경색 (매우 은은하게)
+  const themeBgColor = THEME_COLORS[project.themeColor as ThemeColorKey]?.primary || '#381DFC';
+  const bgOpacity = '05'; // 매우 은은한 배경
+
   return (
-    <div className="min-h-screen bg-gray-50 overflow-y-auto font-omyu">
+    <div className="min-h-screen overflow-y-auto font-omyu" style={{ backgroundColor: `${themeBgColor}${bgOpacity}` }}>
       {/* 헤더 */}
       <header className={`bg-gradient-to-r ${THEME_COLORS[project.themeColor as ThemeColorKey]?.gradient || THEME_COLORS.purple.gradient} text-white py-8 px-4 shadow-2xl sticky top-0 z-40 relative`}>
         {/* 배경 장식 */}
@@ -177,16 +182,19 @@ export default function PublicProjectPage({ params }: { params: Promise<{ projec
           {/* 좌상단 로고 아이콘 */}
           <button
             onClick={handleLogoClick}
-            className="absolute left-0 top-0 z-50 p-1 hover:opacity-80 transition-opacity"
+            className="absolute left-0 top-0 z-50 p-1 hover:opacity-80 transition-opacity flex items-center gap-1 bg-white/20 backdrop-blur-sm rounded-lg"
             title={session ? '대시보드로 이동' : '메인페이지로 이동'}
           >
             <Image
-              src="/image/android-chrome-192x192.png"
+              src="/image/logo.png"
               alt="위시모아"
-              width={40}
-              height={40}
-              className="rounded-lg shadow-md"
+              width={32}
+              height={32}
+              className="rounded"
             />
+            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
           </button>
 
           {/* 소유자 메뉴 버튼 + 드롭다운 */}
@@ -284,6 +292,8 @@ export default function PublicProjectPage({ params }: { params: Promise<{ projec
                 key={item.itemId}
                 item={item}
                 onDonateClick={handleDonateClick}
+                isOwner={project.isOwner}
+                donationAmounts={project.donationAmounts}
               />
             ))}
           </div>
@@ -311,6 +321,7 @@ export default function PublicProjectPage({ params }: { params: Promise<{ projec
           accountNumber: project.accountNumber,
           accountHolder: project.accountHolder,
           tossQrLink: project.tossQrLink,
+          donationAmounts: project.donationAmounts,
         }}
         onDonationSuccess={handleDonationSuccess}
       />
@@ -356,6 +367,12 @@ function ProjectEditModal({
   onClose: () => void;
   onSuccess: () => void;
 }) {
+  // 후원 금액 파싱
+  const parseDonationAmounts = (amountsString?: string): string[] => {
+    if (!amountsString) return ['15000', '20000', '25000'];
+    return amountsString.split(',').map(a => a.trim()).filter(a => a !== '');
+  };
+
   const [formData, setFormData] = useState({
     projectTitle: project.projectTitle,
     projectSubtitle: project.projectSubtitle || '',
@@ -363,6 +380,7 @@ function ProjectEditModal({
     accountNumber: project.accountNumber,
     accountHolder: project.accountHolder,
     tossQrLink: project.tossQrLink || '',
+    donationAmounts: parseDonationAmounts(project.donationAmounts),
     themeColor: (project.themeColor || 'purple') as ThemeColorKey,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -370,6 +388,7 @@ function ProjectEditModal({
   const [isQrGuideOpen, setIsQrGuideOpen] = useState(false);
   const [isDecodingQr, setIsDecodingQr] = useState(false);
   const [qrStatus, setQrStatus] = useState<'none' | 'success' | 'error'>(project.tossQrLink ? 'success' : 'none');
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -453,7 +472,10 @@ function ProjectEditModal({
       const response = await fetch(`/api/projects/${project.projectId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          donationAmounts: formData.donationAmounts?.join(',') || undefined,
+        }),
       });
 
       if (!response.ok) {
@@ -461,17 +483,20 @@ function ProjectEditModal({
         throw new Error(data.error || '수정에 실패했습니다.');
       }
 
-      onSuccess();
+      setSuccessMessage('변경 완료되었습니다');
+      setTimeout(() => {
+        setSuccessMessage(null);
+        onSuccess();
+      }, 1500);
     } catch (err) {
       setError(err instanceof Error ? err.message : '오류가 발생했습니다.');
-    } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto relative">
         <div className="p-4 border-b flex justify-between items-center sticky top-0 bg-white">
           <h2 className="text-lg font-bold">프로젝트 관리</h2>
           <button onClick={onClose} className="text-2xl text-gray-400 hover:text-gray-600">
@@ -480,6 +505,23 @@ function ProjectEditModal({
         </div>
 
         <form onSubmit={handleSubmit} className="p-4 space-y-4">
+          {/* 로딩 오버레이 */}
+          {isSubmitting && (
+            <div className="absolute inset-0 bg-black/20 flex items-center justify-center z-10 rounded-2xl">
+              <div className="bg-white rounded-xl p-6 shadow-xl flex flex-col items-center gap-3">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#381DFC]"></div>
+                <p className="text-sm text-gray-600">저장 중...</p>
+              </div>
+            </div>
+          )}
+
+          {/* 성공 메시지 */}
+          {successMessage && (
+            <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-xl text-sm">
+              {successMessage}
+            </div>
+          )}
+
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm">
               {error}
@@ -563,6 +605,33 @@ function ProjectEditModal({
                 className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#381DFC] outline-none transition-all"
                 maxLength={20}
               />
+            </div>
+          </div>
+
+          {/* 후원 금액 설정 */}
+          <div className="bg-purple-50 rounded-xl p-4 space-y-3">
+            <h3 className="font-semibold text-gray-700 text-sm">💰 후원 금액 설정</h3>
+            <p className="text-xs text-gray-600">후원자가 선택할 수 있는 금액 옵션 (최대 3개)</p>
+            <div className="grid grid-cols-3 gap-2">
+              {[0, 1, 2].map((index) => (
+                <div key={index}>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    금액 {index + 1}
+                  </label>
+                  <input
+                    type="number"
+                    value={formData.donationAmounts[index] || ''}
+                    onChange={(e) => {
+                      const newAmounts = [...formData.donationAmounts];
+                      newAmounts[index] = e.target.value;
+                      setFormData(prev => ({ ...prev, donationAmounts: newAmounts }));
+                    }}
+                    placeholder="원"
+                    className="w-full px-2 py-1.5 rounded-lg border border-gray-200 focus:border-purple-400 focus:ring-1 focus:ring-purple-100 outline-none transition-all text-sm"
+                    min="0"
+                  />
+                </div>
+              ))}
             </div>
           </div>
 

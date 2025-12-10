@@ -13,6 +13,7 @@ interface AccountInfo {
   accountNumber: string;
   accountHolder: string;
   tossQrLink?: string | null;
+  donationAmounts?: string; // 쉼표로 구분된 후원 금액 (예: "15000,20000,25000")
 }
 
 interface DonationModalProps {

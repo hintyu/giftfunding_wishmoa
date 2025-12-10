@@ -26,6 +26,7 @@ export default function NewProjectPage() {
     accountNumber: '',
     accountHolder: '',
     tossQrLink: '',
+    donationAmounts: ['15000', '20000', '25000'], // 후원 금액 배열
     themeColor: 'purple' as ThemeColorKey,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -128,13 +129,25 @@ export default function NewProjectPage() {
       return;
     }
 
+    // 후원 금액 유효성 검사
+    const validAmounts = formData.donationAmounts
+      .filter(a => a.trim() !== '' && !isNaN(Number(a)) && Number(a) > 0);
+    
+    if (validAmounts.length === 0) {
+      setError('최소 1개 이상의 후원 금액을 입력해주세요.');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
       const response = await fetch('/api/projects', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          donationAmounts: validAmounts.join(','), // 쉼표로 구분된 문자열로 변환
+        }),
       });
 
       if (!response.ok) {
@@ -266,6 +279,41 @@ export default function NewProjectPage() {
                 maxLength={20}
               />
             </div>
+          </div>
+
+          {/* 후원 금액 설정 */}
+          <div className="bg-purple-50 rounded-2xl p-5 space-y-4">
+            <h3 className="font-semibold text-gray-800 flex items-center gap-2">
+              💰 후원 금액 설정
+            </h3>
+            <p className="text-sm text-gray-600">
+              후원자가 선택할 수 있는 금액 옵션 (최대 3개)
+            </p>
+
+            <div className="grid grid-cols-3 gap-3">
+              {[0, 1, 2].map((index) => (
+                <div key={index}>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    금액 {index + 1}
+                  </label>
+                  <input
+                    type="number"
+                    value={formData.donationAmounts[index] || ''}
+                    onChange={(e) => {
+                      const newAmounts = [...formData.donationAmounts];
+                      newAmounts[index] = e.target.value;
+                      setFormData(prev => ({ ...prev, donationAmounts: newAmounts }));
+                    }}
+                    placeholder="원"
+                    className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-purple-400 focus:ring-2 focus:ring-purple-100 outline-none transition-all"
+                    min="0"
+                  />
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-gray-500">
+              💡 빈 칸은 자동으로 제외됩니다. &quot;직접 입력&quot; 옵션은 항상 제공됩니다.
+            </p>
           </div>
 
           {/* 토스 QR송금 설정 */}

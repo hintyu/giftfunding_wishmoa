@@ -44,6 +44,7 @@ export default function TossQrGuideModal({ isOpen, onClose }: TossQrGuideModalPr
                 alt="토스 QR 발급 가이드 1"
                 fill
                 className="object-contain bg-gray-100"
+                unoptimized
               />
             </div>
           </div>
@@ -65,6 +66,7 @@ export default function TossQrGuideModal({ isOpen, onClose }: TossQrGuideModalPr
                 alt="토스 QR 발급 가이드 2"
                 fill
                 className="object-contain bg-gray-100"
+                unoptimized
               />
             </div>
           </div>

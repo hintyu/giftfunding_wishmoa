@@ -32,22 +32,22 @@ export const DONATION_STATUS = {
 // 프로젝트 테마 컬러
 export const THEME_COLORS = {
   purple: {
-    name: '보라색',
+    name: '🍇포도',
     gradient: 'from-[#381DFC] via-[#5B3FFF] to-[#7B5FFF]',
     primary: '#381DFC',
   },
   pink: {
-    name: '핑크',
+    name: '🍑복숭아',
     gradient: 'from-[#FF6B9D] via-[#FF8FB3] to-[#FFB3C9]',
     primary: '#FF6B9D',
   },
   orange: {
-    name: '오렌지레드',
+    name: '🍊자몽',
     gradient: 'from-rose-400 via-orange-400 to-amber-400',
     primary: '#F97316',
   },
   green: {
-    name: '민트',
+    name: '🌱민트',
     gradient: 'from-[#2ECC71] via-[#52E3A4] to-[#7FE8C4]',
     primary: '#2ECC71',
   },

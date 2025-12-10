@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { projectTitle, projectSubtitle, accountBank, accountNumber, accountHolder, themeColor, tossQrLink } = body;
+    const { projectTitle, projectSubtitle, accountBank, accountNumber, accountHolder, themeColor, tossQrLink, donationAmounts } = body;
 
     // 유효성 검사
     if (!projectTitle?.trim()) {
@@ -76,6 +76,7 @@ export async function POST(request: NextRequest) {
         accountNumber: encryptedAccountNumber,
         accountHolder: accountHolder.trim(),
         tossQrLink: tossQrLink || null,
+        donationAmounts: donationAmounts || '15000,20000,25000',
         themeColor: themeColor || 'purple',
       },
     });

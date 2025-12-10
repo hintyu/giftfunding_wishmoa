@@ -4,6 +4,18 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { DONATION_AMOUNTS } from '@/lib/constants';
 
+// 후원 금액 파싱 함수
+const parseDonationAmounts = (amountsString?: string): number[] => {
+  if (!amountsString) return DONATION_AMOUNTS;
+  
+  const amounts = amountsString
+    .split(',')
+    .map(a => parseInt(a.trim()))
+    .filter(a => !isNaN(a) && a > 0);
+  
+  return amounts.length > 0 ? amounts : DONATION_AMOUNTS;
+};
+
 // 아이콘 색상
 const ICON_COLORS = [
   '#FF6B9D', '#FFA07A', '#9B59B6', '#3498DB',
@@ -32,12 +44,16 @@ interface Item {
 interface ItemCardProps {
   item: Item;
   onDonateClick: (item: Item, amount: number | 'custom') => void;
+  isOwner?: boolean; // 프로젝트 소유자 여부
+  donationAmounts?: string; // 쉼표로 구분된 후원 금액 (예: "15000,20000,25000")
 }
 
-export default function ItemCard({ item, onDonateClick }: ItemCardProps) {
+export default function ItemCard({ item, onDonateClick, isOwner = false, donationAmounts }: ItemCardProps) {
   const [selectedDonation, setSelectedDonation] = useState<Donation | null>(null);
   const [isMessageFading, setIsMessageFading] = useState(false);
   const [bubbleColor, setBubbleColor] = useState({ color: '', lightColor: '' });
+  const [fadeTimer, setFadeTimer] = useState<NodeJS.Timeout | null>(null);
+  const [closeTimer, setCloseTimer] = useState<NodeJS.Timeout | null>(null);
 
   const currAmt = item.totalDonation || 0;
   const progressPercentage = item.itemPrice > 0 
@@ -62,24 +78,44 @@ export default function ItemCard({ item, onDonateClick }: ItemCardProps) {
   };
 
   const handleIconClick = (donation: Donation, index: number) => {
+    // 기존 타이머 클리어
+    if (fadeTimer) clearTimeout(fadeTimer);
+    if (closeTimer) clearTimeout(closeTimer);
+
     const color = ICON_COLORS[index % ICON_COLORS.length];
     setBubbleColor({ color, lightColor: lightenColor(color) });
     setSelectedDonation(donation);
     setIsMessageFading(false);
 
     // 5초 후 자동 닫기
-    setTimeout(() => setIsMessageFading(true), 4500);
-    setTimeout(() => {
+    const fade = setTimeout(() => setIsMessageFading(true), 4500);
+    const close = setTimeout(() => {
       setSelectedDonation(null);
       setIsMessageFading(false);
     }, 5000);
+    
+    setFadeTimer(fade);
+    setCloseTimer(close);
+  };
+
+  const handleCloseModal = () => {
+    if (fadeTimer) clearTimeout(fadeTimer);
+    if (closeTimer) clearTimeout(closeTimer);
+    setSelectedDonation(null);
+    setIsMessageFading(false);
   };
 
   // 임시 후원자 데이터 (API 연동 전)
   const donations = item.donations || [];
 
+  // 숨김 아이템 처리: 주인은 반투명, 비주인은 숨김
+  const isHidden = item.itemStatus === 'hidden';
+  if (isHidden && !isOwner) {
+    return null; // 비소유자는 숨김 아이템을 보지 못함
+  }
+
   return (
-    <div className="bg-white rounded-2xl shadow-lg overflow-hidden mb-6 mx-4 relative">
+    <div className={`bg-white rounded-2xl shadow-lg overflow-hidden mb-6 mx-4 relative ${isHidden ? 'opacity-50' : ''}`}>
       {/* 상품 이미지/링크 썸네일 */}
       <div className="p-4 bg-gray-50">
         <a 
@@ -182,7 +218,7 @@ export default function ItemCard({ item, onDonateClick }: ItemCardProps) {
         {selectedDonation && (
           <div 
             className={`fixed inset-0 flex items-center justify-center z-50 p-4 transition-opacity duration-300 ${isMessageFading ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
-            onClick={() => setSelectedDonation(null)}
+            onClick={handleCloseModal}
           >
             <div 
               className="max-w-sm w-full rounded-2xl shadow-2xl overflow-hidden"
@@ -212,7 +248,7 @@ export default function ItemCard({ item, onDonateClick }: ItemCardProps) {
                   </p>
                 </div>
                 <button
-                  onClick={() => setSelectedDonation(null)}
+                  onClick={handleCloseModal}
                   className="text-white hover:text-gray-200 text-3xl font-bold leading-none"
                 >
                   ×
@@ -246,14 +282,14 @@ export default function ItemCard({ item, onDonateClick }: ItemCardProps) {
           </div>
         ) : (
           <div className="flex gap-2 mt-4">
-            {DONATION_AMOUNTS.map((amount, index) => {
+            {parseDonationAmounts(donationAmounts).map((amount, index) => {
               const colors = ['#65D5E8', '#381DFC', '#DE1761'];
               return (
                 <button
                   key={amount}
                   onClick={() => onDonateClick(item, amount)}
                   className="flex-1 text-white font-semibold py-2.5 px-2 rounded-lg transition-colors text-sm hover:opacity-80"
-                  style={{ backgroundColor: colors[index] }}
+                  style={{ backgroundColor: colors[index % colors.length] }}
                 >
                   {formatNumber(amount)}
                 </button>

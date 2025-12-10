@@ -116,7 +116,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     }
 
     const body = await request.json();
-    const { projectTitle, projectSubtitle, accountBank, accountNumber, accountHolder, projectStatus, themeColor, tossQrLink } = body;
+    const { projectTitle, projectSubtitle, accountBank, accountNumber, accountHolder, projectStatus, themeColor, tossQrLink, donationAmounts } = body;
 
     // 계좌번호 암호화 (새 값이 있을 때만)
     const encryptedAccountNumber = accountNumber ? encrypt(accountNumber.trim()) : undefined;
@@ -130,6 +130,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
         ...(encryptedAccountNumber && { accountNumber: encryptedAccountNumber }),
         ...(accountHolder && { accountHolder: accountHolder.trim() }),
         ...(tossQrLink !== undefined && { tossQrLink: tossQrLink || null }),
+        ...(donationAmounts !== undefined && { donationAmounts }),
         ...(projectStatus && { projectStatus }),
         ...(themeColor && { themeColor }),
       },
