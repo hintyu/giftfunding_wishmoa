@@ -25,8 +25,8 @@ export const BANKS = [
   '경남은행', '부산은행', '대구은행', '제주은행', '신협',
 ] as const;
 
-// Gemini API 설정 (gemini-1.5-flash: 빠르고 가벼운 모델)
-export const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+// Gemini API 설정 (gemini-2.0-flash: 최신 빠른 모델)
+export const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
 // 프로젝트 상태
 export const PROJECT_STATUS = {
