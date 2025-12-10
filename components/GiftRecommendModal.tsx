@@ -221,7 +221,7 @@ export default function GiftRecommendModal({ isOpen, onClose }: GiftRecommendMod
 
           {/* 안내 문구 */}
           <p className="text-xs text-gray-500 text-center">
-            (선택한 정보는 저장되지 않아요! 가서 살짝 물어보는 용도로만 쓸게요)
+            (선택한 정보는 저장되지 않아요!<br></br>가서 살짝 물어보는 용도로만 쓸게요)
           </p>
         </div>
       </div>

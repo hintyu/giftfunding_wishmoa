@@ -230,15 +230,18 @@ export default function ItemsManagePage({ params }: { params: Promise<{ projectI
         <div className="flex flex-col gap-3 mb-6">
           <button
             onClick={() => setIsAddModalOpen(true)}
-            className="w-full bg-[#381DFC] text-white py-3 rounded-xl font-semibold hover:bg-[#2810d0] transition-colors text-base"
+            className="w-full bg-gradient-to-r from-[#381DFC] via-[#5B3FFF] to-[#7B5FFF] text-white py-3 rounded-xl font-semibold hover:from-[#2810d0] hover:via-[#4A2FEE] hover:to-[#6B4FEE] transition-all shadow-lg hover:shadow-xl text-base"
           >
             + 선물 추가하기
           </button>
           <button
             onClick={() => setIsRecommendModalOpen(true)}
-            className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-colors text-base"
+            className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-colors text-base flex items-center justify-center gap-2"
           >
-            ✨ 선물 추천받기 (BETA)
+            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+            </svg>
+            선물 추천받기
           </button>
         </div>
 
