@@ -76,6 +76,16 @@ async function callGeminiAPI(info: string): Promise<string> {
 
 export async function POST(request: NextRequest) {
   try {
+    // API 키 존재 여부 먼저 확인
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      console.error('GEMINI_API_KEY 환경변수가 설정되지 않았습니다.');
+      return NextResponse.json(
+        { error: 'API 설정이 완료되지 않았습니다. 관리자에게 문의해주세요.' },
+        { status: 500 }
+      );
+    }
+
     // Rate Limiting 체크
     const clientIP = getClientIP(request);
     const rateLimitResult = checkRateLimit(`gemini:${clientIP}`, RATE_LIMITS.GEMINI_API);
@@ -115,7 +125,7 @@ export async function POST(request: NextRequest) {
       }
     );
   } catch (error) {
-    console.error('선물 추천 실패:', error);
+    console.error('선물 추천 실패:', error instanceof Error ? error.message : error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : '추천을 받는데 실패했습니다.' },
       { status: 500 }
