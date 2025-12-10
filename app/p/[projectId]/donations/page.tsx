@@ -32,6 +32,8 @@ export default function DonationsManagePage({ params }: { params: Promise<{ proj
   const [donations, setDonations] = useState<Donation[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'pending' | 'confirmed'>('all');
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (authStatus === 'unauthenticated') {
@@ -64,6 +66,7 @@ export default function DonationsManagePage({ params }: { params: Promise<{ proj
   };
 
   const handleStatusChange = async (donationId: string, newStatus: string) => {
+    setIsProcessing(true);
     try {
       const response = await fetch(`/api/donations/${donationId}`, {
         method: 'PATCH',
@@ -72,26 +75,38 @@ export default function DonationsManagePage({ params }: { params: Promise<{ proj
       });
 
       if (!response.ok) throw new Error('Failed to update');
+      
+      const message = newStatus === 'confirmed' ? '입금 확인 완료!' : '대기 상태로 변경됨';
+      setSuccessMessage(message);
+      setTimeout(() => setSuccessMessage(null), 2000);
       loadDonations();
     } catch (error) {
       console.error('상태 변경 실패:', error);
       alert('상태 변경에 실패했습니다.');
+    } finally {
+      setIsProcessing(false);
     }
   };
 
   const handleDelete = async (donationId: string) => {
     if (!confirm('정말 삭제하시겠습니까?')) return;
 
+    setIsProcessing(true);
     try {
       const response = await fetch(`/api/donations/${donationId}`, {
         method: 'DELETE',
       });
 
       if (!response.ok) throw new Error('Failed to delete');
+      
+      setSuccessMessage('삭제 완료!');
+      setTimeout(() => setSuccessMessage(null), 2000);
       loadDonations();
     } catch (error) {
       console.error('삭제 실패:', error);
       alert('삭제에 실패했습니다.');
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -155,6 +170,23 @@ export default function DonationsManagePage({ params }: { params: Promise<{ proj
 
       {/* 후원 목록 */}
       <main className="max-w-2xl mx-auto py-6 px-4">
+        {/* 처리중 오버레이 */}
+        {isProcessing && (
+          <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50">
+            <div className="bg-white rounded-xl p-6 shadow-xl flex flex-col items-center gap-3">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#381DFC]"></div>
+              <p className="text-sm text-gray-600">처리 중...</p>
+            </div>
+          </div>
+        )}
+
+        {/* 성공 메시지 */}
+        {successMessage && (
+          <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg text-sm shadow-lg z-50 animate-fade-in">
+            {successMessage}
+          </div>
+        )}
+
         {filteredDonations.length === 0 ? (
           <div className="text-center py-20">
             <div className="text-6xl mb-4">💝</div>
