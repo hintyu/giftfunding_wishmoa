@@ -87,27 +87,28 @@ export default function Home() {
             지금 바로 시작해보세요!
           </p>
           
-          <div className="flex flex-col items-center gap-4 w-full max-w-[300px] mx-auto">
+          <div className="flex flex-col items-center gap-3 w-full max-w-[300px] mx-auto">
             {/* 네이버 로그인 버튼 */}
             <button
               onClick={handleNaverLogin}
-              className="w-full transition-transform hover:scale-105 active:scale-95 cursor-pointer"
+              className="w-full transition-transform hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
             >
               <Image
                 src={naverLoginButton}
                 alt="네이버 로그인"
                 width={300}
-                height={60}
-                className="w-full h-[60px] object-contain rounded-lg shadow-md"
+                height={45}
+                className="w-full h-[45px] object-contain"
               />
             </button>
 
             {/* 구글 로그인 버튼 */}
             <button
               onClick={handleGoogleLogin}
-              className="w-full h-[60px] flex items-center justify-center gap-2 md:gap-3 bg-white border-2 border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-all hover:border-gray-400"
+              className="w-full h-[45px] flex items-center justify-center gap-2 bg-white rounded-md hover:bg-gray-50 transition-all"
+              style={{ boxShadow: '0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15)' }}
             >
-              <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
+              <svg className="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 24 24">
                 <path
                   fill="#4285F4"
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -125,7 +126,7 @@ export default function Home() {
                   d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                 />
               </svg>
-              <span className="text-gray-700 font-medium" style={{ fontFamily: "'Roboto', system-ui, -apple-system, sans-serif", letterSpacing: '0.01em' }}>Google로 로그인</span>
+              <span className="text-[#1f1f1f] text-[14px] font-medium" style={{ fontFamily: "'Roboto', system-ui, -apple-system, sans-serif" }}>Google로 로그인</span>
             </button>
 
             {/* 구경하기 버튼 */}

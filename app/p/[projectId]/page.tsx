@@ -8,6 +8,7 @@ import ItemCard from '@/components/ItemCard';
 import DonationModal from '@/components/DonationModal';
 import TossQrGuideModal from '@/components/TossQrGuideModal';
 import { APP_NAME, THEME_COLORS, BANKS, DEFAULT_DONATION_AMOUNTS_STRING, type ThemeColorKey } from '@/lib/constants';
+import logoImage from '@/app/image/logo.png';
 
 interface Donation {
   donationId: string;
@@ -171,7 +172,7 @@ export default function PublicProjectPage({ params }: { params: Promise<{ projec
   return (
     <div className="min-h-screen overflow-y-auto font-omyu" style={{ backgroundColor: `${themeBgColor}${bgOpacity}` }}>
       {/* 헤더 */}
-      <header className={`bg-gradient-to-r ${THEME_COLORS[project.themeColor as ThemeColorKey]?.gradient || THEME_COLORS.purple.gradient} text-white py-8 px-4 shadow-2xl sticky top-0 z-40 relative`}>
+      <header className={`bg-gradient-to-r ${THEME_COLORS[project.themeColor as ThemeColorKey]?.gradient || THEME_COLORS.purple.gradient} text-white pt-3 pb-6 px-4 shadow-2xl sticky top-0 z-40 relative`}>
         {/* 배경 장식 */}
         <div className="absolute inset-0 opacity-10 overflow-hidden pointer-events-none">
           <div className="absolute top-0 right-0 w-40 h-40 bg-white rounded-full blur-3xl"></div>
@@ -179,69 +180,73 @@ export default function PublicProjectPage({ params }: { params: Promise<{ projec
         </div>
         
         <div className="max-w-2xl mx-auto relative">
-          {/* 좌상단 로고 아이콘 */}
-          <button
-            onClick={handleLogoClick}
-            className="absolute left-0 top-0 z-50 p-1 hover:opacity-80 transition-opacity flex items-center gap-1 bg-white/20 backdrop-blur-sm rounded-lg"
-            title={session ? '대시보드로 이동' : '메인페이지로 이동'}
-          >
-            <Image
-              src="/image/logo.png"
-              alt="위시모아"
-              width={32}
-              height={32}
-              className="rounded"
-            />
-            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
+          {/* 상단 네비게이션 바 (로고 + 햄버거 메뉴) */}
+          <div className="flex justify-between items-center mb-4">
+            {/* 좌측 로고 아이콘 */}
+            <button
+              onClick={handleLogoClick}
+              className="z-50 p-1 hover:opacity-80 transition-opacity flex items-center gap-1 bg-white/20 backdrop-blur-sm rounded-lg"
+              title={session ? '대시보드로 이동' : '메인페이지로 이동'}
+            >
+              <Image
+                src={logoImage}
+                alt="위시모아"
+                width={28}
+                height={28}
+                className="rounded"
+              />
+              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
 
-          {/* 소유자 메뉴 버튼 + 드롭다운 */}
-          {project.isOwner && (
-            <div className="absolute right-0 top-0 z-50">
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
-              
-              {/* 드롭다운 메뉴 */}
-              {isMenuOpen && (
-                <div className="absolute right-0 top-full mt-1 bg-white rounded-xl shadow-xl overflow-hidden min-w-[180px]">
-                  <button
-                    onClick={() => { router.push(`/p/${projectId}/items`); setIsMenuOpen(false); }}
-                    className="w-full px-4 py-3 text-left text-gray-700 hover:bg-gray-100 flex items-center gap-2"
-                  >
-                    🎁 선물 관리
-                  </button>
-                  <button
-                    onClick={() => { router.push(`/p/${projectId}/donations`); setIsMenuOpen(false); }}
-                    className="w-full px-4 py-3 text-left text-gray-700 hover:bg-gray-100 flex items-center gap-2"
-                  >
-                    💝 후원 관리
-                  </button>
-                  <button
-                    onClick={() => { setIsEditModalOpen(true); setIsMenuOpen(false); }}
-                    className="w-full px-4 py-3 text-left text-gray-700 hover:bg-gray-100 flex items-center gap-2"
-                  >
-                    ⚙️ 프로젝트 관리
-                  </button>
-                  <hr />
-                  <button
-                    onClick={handleShare}
-                    className="w-full px-4 py-3 text-left text-gray-700 hover:bg-gray-100 flex items-center gap-2"
-                  >
-                    🔗 링크 공유
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
+            {/* 우측 소유자 메뉴 버튼 */}
+            {project.isOwner && (
+              <div className="relative z-50">
+                <button
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                </button>
+                
+                {/* 드롭다운 메뉴 */}
+                {isMenuOpen && (
+                  <div className="absolute right-0 top-full mt-1 bg-white rounded-xl shadow-xl overflow-hidden min-w-[180px]">
+                    <button
+                      onClick={() => { router.push(`/p/${projectId}/items`); setIsMenuOpen(false); }}
+                      className="w-full px-4 py-3 text-left text-gray-700 hover:bg-gray-100 flex items-center gap-2"
+                    >
+                      🎁 선물 관리
+                    </button>
+                    <button
+                      onClick={() => { router.push(`/p/${projectId}/donations`); setIsMenuOpen(false); }}
+                      className="w-full px-4 py-3 text-left text-gray-700 hover:bg-gray-100 flex items-center gap-2"
+                    >
+                      💝 후원 관리
+                    </button>
+                    <button
+                      onClick={() => { setIsEditModalOpen(true); setIsMenuOpen(false); }}
+                      className="w-full px-4 py-3 text-left text-gray-700 hover:bg-gray-100 flex items-center gap-2"
+                    >
+                      ⚙️ 프로젝트 관리
+                    </button>
+                    <hr />
+                    <button
+                      onClick={handleShare}
+                      className="w-full px-4 py-3 text-left text-gray-700 hover:bg-gray-100 flex items-center gap-2"
+                    >
+                      🔗 링크 공유
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
           
+          {/* 프로젝트 제목 */}
           <h1 className="text-3xl font-bold text-center mb-2" style={{
             textShadow: '0 2px 10px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.2)',
             letterSpacing: '-0.5px'
