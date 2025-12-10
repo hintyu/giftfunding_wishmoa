@@ -3,17 +3,9 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { THEME_COLORS, type ThemeColorKey } from "@/lib/constants";
+import { THEME_COLORS, BANKS, type ThemeColorKey } from "@/lib/constants";
 import TossQrGuideModal from "@/components/TossQrGuideModal";
 import { decodeQRFromImage, isValidTossQrLink, extractAccountFromTossLink } from "@/lib/qr-decoder";
-
-// 은행 목록
-const BANKS = [
-  '카카오뱅크', '토스뱅크', '국민은행', '신한은행', '하나은행',
-  '우리은행', 'NH농협은행', 'IBK기업은행', 'SC제일은행', '새마을금고',
-  '케이뱅크', '우체국', '수협은행', '광주은행', '전북은행',
-  '경남은행', '부산은행', '대구은행', '제주은행', '신협',
-] as const;
 
 export default function NewProjectPage() {
   const { status } = useSession();

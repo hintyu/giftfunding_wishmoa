@@ -2,25 +2,20 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { DONATION_AMOUNTS } from '@/lib/constants';
+import { DONATION_AMOUNTS, ICON_COLORS, DONATION_BUTTON_COLORS } from '@/lib/constants';
+import { formatNumber } from '@/lib/utils';
 
 // 후원 금액 파싱 함수
 const parseDonationAmounts = (amountsString?: string): number[] => {
-  if (!amountsString) return DONATION_AMOUNTS;
+  if (!amountsString) return [...DONATION_AMOUNTS];
   
   const amounts = amountsString
     .split(',')
     .map(a => parseInt(a.trim()))
     .filter(a => !isNaN(a) && a > 0);
   
-  return amounts.length > 0 ? amounts : DONATION_AMOUNTS;
+  return amounts.length > 0 ? amounts : [...DONATION_AMOUNTS];
 };
-
-// 아이콘 색상
-const ICON_COLORS = [
-  '#FF6B9D', '#FFA07A', '#9B59B6', '#3498DB',
-  '#F39C12', '#1ABC9C', '#E74C3C', '#95A5A6'
-];
 
 interface Donation {
   donationId: string;
@@ -60,10 +55,6 @@ export default function ItemCard({ item, onDonateClick, isOwner = false, donatio
     ? Math.min((currAmt / item.itemPrice) * 100, 100) 
     : 0;
   const isCompleted = item.itemStatus === 'completed' || progressPercentage >= 100;
-
-  const formatNumber = (num: number) => {
-    return new Intl.NumberFormat('ko-KR').format(num);
-  };
 
   // 색상을 밝게 변환
   const lightenColor = (color: string) => {
@@ -282,19 +273,16 @@ export default function ItemCard({ item, onDonateClick, isOwner = false, donatio
           </div>
         ) : (
           <div className="flex gap-2 mt-4">
-            {parseDonationAmounts(donationAmounts).map((amount, index) => {
-              const colors = ['#65D5E8', '#381DFC', '#DE1761'];
-              return (
-                <button
-                  key={amount}
-                  onClick={() => onDonateClick(item, amount)}
-                  className="flex-1 text-white font-semibold py-2.5 px-2 rounded-lg transition-colors text-sm hover:opacity-80"
-                  style={{ backgroundColor: colors[index % colors.length] }}
-                >
-                  {formatNumber(amount)}
-                </button>
-              );
-            })}
+            {parseDonationAmounts(donationAmounts).map((amount, index) => (
+              <button
+                key={amount}
+                onClick={() => onDonateClick(item, amount)}
+                className="flex-1 text-white font-semibold py-2.5 px-2 rounded-lg transition-colors text-sm hover:opacity-80"
+                style={{ backgroundColor: DONATION_BUTTON_COLORS[index % DONATION_BUTTON_COLORS.length] }}
+              >
+                {formatNumber(amount)}
+              </button>
+            ))}
             <button
               onClick={() => onDonateClick(item, 'custom')}
               className="flex-1 bg-[#E6A5BD] hover:opacity-80 text-white font-semibold py-2.5 px-1 rounded-lg transition-colors text-sm whitespace-nowrap"

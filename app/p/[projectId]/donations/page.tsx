@@ -3,6 +3,7 @@
 import { useState, useEffect, use } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { formatNumber, formatDateTime } from '@/lib/utils';
 
 interface Donation {
   donationId: string;
@@ -94,18 +95,6 @@ export default function DonationsManagePage({ params }: { params: Promise<{ proj
     }
   };
 
-  const formatNumber = (num: number) => {
-    return new Intl.NumberFormat('ko-KR').format(num);
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('ko-KR', {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
 
   const filteredDonations = donations.filter(d => {
     if (filter === 'all') return d.donationStatus !== 'deleted';
@@ -204,7 +193,7 @@ export default function DonationsManagePage({ params }: { params: Promise<{ proj
 
                 <div className="flex justify-between items-center mt-3">
                   <span className="text-xs text-gray-400">
-                    {formatDate(donation.createdAt)}
+                    {formatDateTime(donation.createdAt)}
                   </span>
 
                   <div className="flex gap-2">

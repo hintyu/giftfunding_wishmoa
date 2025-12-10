@@ -263,6 +263,9 @@ GOOGLE_CLIENT_SECRET="xxx"
 
 # Vercel Blob Storage
 BLOB_READ_WRITE_TOKEN="vercel_blob_rw_xxxxxxxxxxxxx"
+
+# Gemini API (선물 추천 기능)
+GEMINI_API_KEY="your-gemini-api-key"
 ```
 
 ### 4. 데이터베이스 마이그레이션

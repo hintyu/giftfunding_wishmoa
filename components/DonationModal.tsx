@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { formatNumber } from '@/lib/utils';
 
 interface Item {
   itemId: string;
@@ -40,10 +41,6 @@ export default function DonationModal({
 
   const isCustomAmount = amount === 'custom';
   const finalAmount = isCustomAmount ? parseInt(customAmount) || 0 : (amount as number);
-
-  const formatNumber = (num: number) => {
-    return new Intl.NumberFormat('ko-KR').format(num);
-  };
 
   const accountString = `${accountInfo.accountNumber} ${accountInfo.accountBank} (${accountInfo.accountHolder})`;
 

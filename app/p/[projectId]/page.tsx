@@ -7,7 +7,7 @@ import Image from 'next/image';
 import ItemCard from '@/components/ItemCard';
 import DonationModal from '@/components/DonationModal';
 import TossQrGuideModal from '@/components/TossQrGuideModal';
-import { APP_NAME, THEME_COLORS, type ThemeColorKey } from '@/lib/constants';
+import { APP_NAME, THEME_COLORS, BANKS, DEFAULT_DONATION_AMOUNTS_STRING, type ThemeColorKey } from '@/lib/constants';
 
 interface Donation {
   donationId: string;
@@ -349,14 +349,6 @@ export default function PublicProjectPage({ params }: { params: Promise<{ projec
   );
 }
 
-// 은행 목록
-const BANKS = [
-  '카카오뱅크', '토스뱅크', '국민은행', '신한은행', '하나은행',
-  '우리은행', 'NH농협은행', 'IBK기업은행', 'SC제일은행', '새마을금고',
-  '케이뱅크', '우체국', '수협은행', '광주은행', '전북은행',
-  '경남은행', '부산은행', '대구은행', '제주은행', '신협',
-] as const;
-
 // 프로젝트 수정 모달
 function ProjectEditModal({
   project,
@@ -369,7 +361,7 @@ function ProjectEditModal({
 }) {
   // 후원 금액 파싱
   const parseDonationAmounts = (amountsString?: string): string[] => {
-    if (!amountsString) return ['15000', '20000', '25000'];
+    if (!amountsString) return DEFAULT_DONATION_AMOUNTS_STRING.split(',');
     return amountsString.split(',').map(a => a.trim()).filter(a => a !== '');
   };
 

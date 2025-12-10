@@ -21,6 +21,8 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import GiftRecommendModal from '@/components/GiftRecommendModal';
+import { formatNumber } from '@/lib/utils';
 
 interface Item {
   itemId: string;
@@ -47,6 +49,7 @@ export default function ItemsManagePage({ params }: { params: Promise<{ projectI
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isRecommendModalOpen, setIsRecommendModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Item | null>(null);
   const [isSavingOrder, setIsSavingOrder] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -175,10 +178,6 @@ export default function ItemsManagePage({ params }: { params: Promise<{ projectI
     }
   };
 
-  const formatNumber = (num: number) => {
-    return new Intl.NumberFormat('ko-KR').format(num);
-  };
-
   if (authStatus === 'loading' || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -201,12 +200,20 @@ export default function ItemsManagePage({ params }: { params: Promise<{ projectI
             </button>
             <h1 className="text-lg font-bold">선물 관리</h1>
           </div>
-          <button
-            onClick={() => setIsAddModalOpen(true)}
-            className="bg-[#381DFC] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#2810d0] transition-colors"
-          >
-            + 추가
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setIsAddModalOpen(true)}
+              className="bg-[#381DFC] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#2810d0] transition-colors"
+            >
+              + 추가
+            </button>
+            <button
+              onClick={() => setIsRecommendModalOpen(true)}
+              className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-colors text-sm"
+            >
+              ✨ 추천받기 (BETA)
+            </button>
+          </div>
         </div>
       </header>
 
@@ -294,6 +301,12 @@ export default function ItemsManagePage({ params }: { params: Promise<{ projectI
           }}
         />
       )}
+
+      {/* 선물 추천 모달 */}
+      <GiftRecommendModal
+        isOpen={isRecommendModalOpen}
+        onClose={() => setIsRecommendModalOpen(false)}
+      />
     </div>
   );
 }
