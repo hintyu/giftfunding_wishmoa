@@ -46,9 +46,9 @@ export default function Home() {
             <Image
               src={logo}
               alt="위시모아 로고"
-              width={120}
-              height={120}
-              className="w-24 h-24 md:w-32 md:h-32"
+              width={240}
+              height={240}
+              className="w-48 h-48 md:w-64 md:h-64"
               priority
             />
           </div>
@@ -165,7 +165,7 @@ export default function Home() {
 // 기능 소개 카드 컴포넌트
 function FeatureCard({ emoji, title, description }: { emoji: string; title: string; description: string }) {
   return (
-    <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-4 md:p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow min-w-[100px] md:min-w-0">
+    <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-4 md:p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow min-w-[100px] md:min-w-0 max-w-[200px]">
       <div className="flex items-center gap-2 mb-2 md:mb-3">
         <span className="text-xl md:text-2xl">{emoji}</span>
         <h3 className="text-base md:text-lg font-semibold text-gray-800">{title}</h3>
