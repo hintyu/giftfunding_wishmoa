@@ -1,6 +1,8 @@
 'use client';
 
 import Image from 'next/image';
+import tossQrGuide1 from '@/app/image/toss_qr_guide1.jpg';
+import tossQrGuide2 from '@/app/image/toss_qr_guide2.jpg';
 
 interface TossQrGuideModalProps {
   isOpen: boolean;
@@ -40,11 +42,10 @@ export default function TossQrGuideModal({ isOpen, onClose }: TossQrGuideModalPr
             </p>
             <div className="relative w-full aspect-[9/16] max-w-[250px] mx-auto rounded-lg overflow-hidden shadow-md">
               <Image
-                src="/image/toss_qr_guide1.jpg"
+                src={tossQrGuide1}
                 alt="토스 QR 발급 가이드 1"
                 fill
                 className="object-contain bg-gray-100"
-                unoptimized
               />
             </div>
           </div>
@@ -62,11 +63,10 @@ export default function TossQrGuideModal({ isOpen, onClose }: TossQrGuideModalPr
             </p>
             <div className="relative w-full aspect-[9/16] max-w-[250px] mx-auto rounded-lg overflow-hidden shadow-md">
               <Image
-                src="/image/toss_qr_guide2.jpg"
+                src={tossQrGuide2}
                 alt="토스 QR 발급 가이드 2"
                 fill
                 className="object-contain bg-gray-100"
-                unoptimized
               />
             </div>
           </div>

@@ -8,7 +8,6 @@ import ItemCard from '@/components/ItemCard';
 import DonationModal from '@/components/DonationModal';
 import TossQrGuideModal from '@/components/TossQrGuideModal';
 import { APP_NAME, THEME_COLORS, BANKS, DEFAULT_DONATION_AMOUNTS_STRING, type ThemeColorKey } from '@/lib/constants';
-import logoImage from '@/app/image/logo.png';
 
 interface Donation {
   donationId: string;
@@ -182,20 +181,16 @@ export default function PublicProjectPage({ params }: { params: Promise<{ projec
         <div className="max-w-2xl mx-auto relative">
           {/* 상단 네비게이션 바 (로고 + 햄버거 메뉴) */}
           <div className="flex justify-between items-center mb-4">
-            {/* 좌측 로고 아이콘 */}
+            {/* 좌측 위시모아 텍스트 로고 */}
             <button
               onClick={handleLogoClick}
-              className="z-50 p-1 hover:opacity-80 transition-opacity flex items-center gap-1 bg-white/20 backdrop-blur-sm rounded-lg"
+              className="z-50 px-3 py-1.5 hover:opacity-90 transition-opacity bg-white/70 backdrop-blur-sm rounded-lg flex items-center gap-1"
               title={session ? '대시보드로 이동' : '메인페이지로 이동'}
             >
-              <Image
-                src={logoImage}
-                alt="위시모아"
-                width={28}
-                height={28}
-                className="rounded"
-              />
-              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <span className="text-base font-bold bg-gradient-to-r from-rose-500 to-amber-500 bg-clip-text text-transparent">
+                {APP_NAME}
+              </span>
+              <svg className="w-4 h-4 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </button>
