@@ -44,11 +44,13 @@ export default function GiftRecommendModal({ isOpen, onClose }: GiftRecommendMod
         body: JSON.stringify({ info: infoText }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error('추천을 받는데 실패했습니다.');
+        // 서버에서 반환한 에러 메시지 사용
+        throw new Error(data.error || `추천을 받는데 실패했습니다. (${response.status})`);
       }
 
-      const data = await response.json();
       setRecommendation(data.recommendation);
     } catch (err) {
       setError(err instanceof Error ? err.message : '오류가 발생했습니다.');

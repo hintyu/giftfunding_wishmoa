@@ -49,8 +49,17 @@ async function callGeminiAPI(info: string): Promise<string> {
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       // API 키 노출 방지를 위해 상세 에러는 서버 로그에만 기록
-      console.error('Gemini API 응답 에러:', response.status, errorData);
-      throw new Error(`Gemini API 오류: ${response.status}`);
+      console.error('Gemini API 응답 에러:', {
+        status: response.status,
+        statusText: response.statusText,
+        error: errorData,
+        hasApiKey: !!apiKey,
+        apiKeyLength: apiKey?.length || 0,
+      });
+      
+      // 사용자에게는 간단한 메시지만 전달
+      const errorMessage = errorData?.error?.message || `Gemini API 오류 (${response.status})`;
+      throw new Error(errorMessage);
     }
 
     const data = await response.json();
@@ -125,9 +134,17 @@ export async function POST(request: NextRequest) {
       }
     );
   } catch (error) {
-    console.error('선물 추천 실패:', error instanceof Error ? error.message : error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    
+    console.error('선물 추천 실패:', {
+      message: errorMessage,
+      stack: errorStack,
+      timestamp: new Date().toISOString(),
+    });
+    
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : '추천을 받는데 실패했습니다.' },
+      { error: errorMessage },
       { status: 500 }
     );
   }
